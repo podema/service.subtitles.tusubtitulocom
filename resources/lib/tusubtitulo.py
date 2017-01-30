@@ -4,7 +4,7 @@ import re
 from utils import languages, geturl, log
 from BeautifulSoup import BeautifulSoup
 
-main_url = "http://www.tusubtitulo.com/serie/"
+main_url = "https://www.tusubtitulo.com/ajax_loadShow.php?show=770&season=6"
 
 def search_tvshow(tvshow, season, episode, languages):
     #log(__name__,"TVSHOW = %s" % (tvshow))
@@ -18,10 +18,14 @@ def search_tvshow(tvshow, season, episode, languages):
     #log(__name__, season)
     #log(__name__, episode)
     #log(__name__, languages)
-    searchstring = re.sub(r'\s', '-', _tvshow + '/' + season + '/' + episode)
-    url = main_url + searchstring.lower() + '/' + code
+    ajax_url = main_url + _tvshow + '&season=' + season
     #log( __name__ ,"URL = %s" % (url))
-    return getallsubsforurl(url, languages)
+    ajax_content=geturl(ajax_url)
+    soup = BeautifulSoup(ajax_content)
+    links = soup.findAll("td",class_="NewsTitle")
+    for link in links:
+        print links
+    #return getallsubsforurl(url, languages)
 
 def getcode(tvshow):
     #log(__name__, "CODE=%s" %(tvshow))
@@ -45,6 +49,7 @@ def parsetvshow(tvshow, level):
 def getallsubsforurl(url, langs):
     result = []
     content = geturl(url)
+    print content
     soup = BeautifulSoup(content)
     for versions in soup.findAll("div", {"class": "ssdiv", "id": re.compile('version[0-9]+')}):
         version = versions.find("p", {"class": "title-sub"})
@@ -72,4 +77,4 @@ def getallsubsforurl(url, langs):
 
 if __name__ == "__main__":
     subs = search_tvshow("game of thrones", "6", "1", "es,en")
-    for sub in subs: print sub['server'], sub['link']
+    for sub in subs: sub['link']
