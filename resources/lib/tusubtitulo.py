@@ -4,7 +4,7 @@ import re
 from utils import languages, geturl, log
 from BeautifulSoup import BeautifulSoup
 
-main_url = "https://www.tusubtitulo.com/ajax_loadShow.php?show=770&season=6"
+main_url = "https://www.tusubtitulo.com/ajax_loadShow.php?show="
 
 def search_tvshow(tvshow, season, episode, languages):
     #log(__name__,"TVSHOW = %s" % (tvshow))
