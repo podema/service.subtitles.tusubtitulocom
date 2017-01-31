@@ -22,10 +22,8 @@ def search_tvshow(tvshow, season, episode, languages):
     #log( __name__ ,"URL = %s" % (url))
     ajax_content=geturl(ajax_url)
     soup = BeautifulSoup(ajax_content)
-    links = soup.findAll("td",class_="NewsTitle")
-    for link in links:
-        print links
-    #return getallsubsforurl(url, languages)
+    links = soup.findAll("td",{"class":"NewsTitle"})
+    return getallsubsforurl("http:"+links[int(episode)].a['href'], languages)
 
 def getcode(tvshow):
     #log(__name__, "CODE=%s" %(tvshow))
@@ -49,7 +47,6 @@ def parsetvshow(tvshow, level):
 def getallsubsforurl(url, langs):
     result = []
     content = geturl(url)
-    print content
     soup = BeautifulSoup(content)
     for versions in soup.findAll("div", {"class": "ssdiv", "id": re.compile('version[0-9]+')}):
         version = versions.find("p", {"class": "title-sub"})
@@ -77,4 +74,4 @@ def getallsubsforurl(url, langs):
 
 if __name__ == "__main__":
     subs = search_tvshow("game of thrones", "6", "1", "es,en")
-    for sub in subs: sub['link']
+    for sub in subs: print sub['server'], sub['link']
